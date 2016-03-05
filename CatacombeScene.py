@@ -10,8 +10,7 @@ from Views import *
 
 class CatacombeScene():
 
-    def __init__(self, sprites, life, clock, input, score, view ):
-        self.spriteSet = sprites
+    def __init__(self, screen, sprites, spriteAll, life, clock, input, score ):
         self.Life = life
         self.debug = True
         self.level = 1
@@ -19,15 +18,19 @@ class CatacombeScene():
         self.input = input
         self.plate = []
         self.score = score
-        self.view = view
+        self.screen = screen
+        self.sprites = sprites
+        self.spriteAll= spriteAll
 
     #-------------------------------------
     # Construction de la scene
     #-------------------------------------
     def Initialize(self):
-        self.createGargou()
-        self.createGuardianMummy() 
-        self.createMummy()
+        self.Mummy = []
+        self.guardianMummy = []
+        self.Gargou = Gargou( self )
+        self.Gargou.level = 1
+        self.view = ViewScene( self.screen, self.sprites, self.spriteAll, self.Mummy, self.guardianMummy, self.Gargou )
         
     #-------------------------------------
     # Démarage de la scène
@@ -63,7 +66,7 @@ class CatacombeScene():
         self.plate[2][15] = 1
         self.plate[2][16] = 1
         # Ajout d'une momie supplémetaire
-        self.Mummy.append(Mummy(1, 23, self, self.view))        
+        self.Mummy.append(Mummy(1, 23, self))
         # Réinitialisation emplacement momies
         i = 1
         for mum in self.Mummy:
@@ -71,7 +74,7 @@ class CatacombeScene():
             i += 1
 
     def prepareGraphics(self):
-        self.view.init( self.level, self.Life, self.score, self.plate, self.debug, self.boxchoice )
+        self.view.init( self.level, self.Life, self.score, self.plate, self.debug, self.boxchoice)
 
     #-------------------------------------
     # DELTA T
@@ -82,17 +85,65 @@ class CatacombeScene():
             self.terminate( 'UpLevel' )
 
         # Joueur
-        self.Gargou.tick()
         self.Gargou.move(self.input.direction)
+
+        # Si il y a eu mouvement (non entravé)
+        if self.Gargou.movement.entrave == False :                    
+            # Ouverture de blocs ?
+            if self.Gargou.movement.y>2:
+                xx1 = min(4, max(0, (self.Gargou.movement.x - 3) // 7))
+                yy1 = min(3, max(0, (self.Gargou.movement.y - 5) // 5))
+                xx2 = min(4, (self.Gargou.movement.x - 1 )// 7)
+                yy2 = min(3, (self.Gargou.movement.y - 3) // 5)
+                # 4 possibilités
+                if self.box[yy1][xx1] == 'NonTested': 
+                    self.UpdateClose(xx1, yy1)
+                if self.box[yy1][xx2] == 'NonTested': 
+                    self.UpdateClose(xx2, yy1)
+                if self.box[yy2][xx1] == 'NonTested': 
+                    self.UpdateClose(xx1, yy2)
+                if self.box[yy2][xx2] == 'NonTested': 
+                    self.UpdateClose(xx2, yy2)
 
         # Momies "gardiennes"
         for guardian in self.guardianMummy:
             guardian.tick()
+            if guardian.movable == 0:
+                guardian.iteration += 1
+                
+                if guardian.iteration == 16:
+                    self.Mummy.append(Mummy(guardian.x, guardian.y, self))
+                    self.plate[guardian.y][guardian.x] = 1
+                    self.plate[guardian.y+1][guardian.x] = 1
+                    self.plate[guardian.y][guardian.x+1] = 1
+                    self.plate[guardian.y+1][guardian.x+1] = 1
+                    self.view.eraseTrace( guardian.x, guardian.y )
+                    self.guardianMummy.remove(guardian)
+                    self.view.remove(guardian)
 
         # Pour chaque momie
         for mum in self.Mummy:    
             mum.move()
-            mum.tick()
+
+            # Collision Momie/Joueur ?
+            if abs(mum.x - self.Gargou.movement.x) <= 1 and abs(mum.y - self.Gargou.movement.y) <= 1:
+                # Incidence uniquement si le joueur ne détient pas le parchemin
+                if not self.Scroll:
+                    # Perte d'une vie
+                    self.Life.life -= 1
+                    self.Life.render()
+                    if self.Life.life == 0:
+                        self.terminate( 'GameOver' )
+                # Le joueur a un parchemin
+                else:
+                    # Perte du parchemin
+                    self.Scroll = False
+                    # Mise à jour du score
+                    self.score.render()
+                # La momie est "bouffée" par le joueur
+                # mum.sprite.kill()
+                self.Mummy.remove(mum)
+                self.view.remove(mum)
 
     def preDispatch(self):
         
@@ -101,15 +152,17 @@ class CatacombeScene():
             # Tout les 6 niveau, self.Level revient à 1
             if self.level == 1:
                 self.Gargou.level += 1               
-                for mum in self.Mummy: mum.kill()
+                for mum in self.Mummy: 
+                    mum.kill()
                 MUMMY = []                
         elif self.stopEventName == 'GameOver' :
             return
 
     def Stop(self):
         self.preDispatch()
-        for mum in self.guardianMummy: mum.kill()
-        self.guardianMummy = []
+        for guardian in self.guardianMummy: 
+            self.guardianMummy.remove(guardian)
+            self.view.remove(guardian)
         
     def draw(self,screen):
         self.view.render()
@@ -155,7 +208,6 @@ class CatacombeScene():
                 if self.plate[i][j] == 1 and self.trace[i][j] == 0: return False
         self.box[y][x] = self.boxchoice[5 * y + x]
         self.view.openBloc( self.box, x, y )
-        #self.image.blit(self.spriteSet['Box'][self.box[y][x]], (32 + 112 * x, 64 + 80 * y))
         if self.box[y][x] == 'Treasure': self.score.score += 5
         elif self.box[y][x] == "RoyalMummy":
             self.score.score +=50
@@ -168,16 +220,6 @@ class CatacombeScene():
         elif self.box[y][x] == "GuardianMummy"+str(self.level):
             self.guardianMummy.append(GuardianMummy(self, x, y ))
         self.score.render()
-
-    def createGargou(self):
-        self.Gargou = Gargou( self, self.view )
-        self.Gargou.level = 1
-
-    def createGuardianMummy(self):
-        self.guardianMummy = []
-
-    def createMummy(self):
-        self.Mummy = []
 
     def terminate(self, code ):
         self.stopEventName = code

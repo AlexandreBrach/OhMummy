@@ -38,15 +38,11 @@ def main():
 
     # Initialisation de l'application
     random.seed()   
-    SCREENRECT = Rect(0, 0, 768, 544)
     screen = pygame.display.set_mode((768, 544))
     pygame.display.set_caption("Oh Mummy")
     clock = pygame.time.Clock()
     
-    background = pygame.Surface(SCREENRECT.size)
-    background = background.convert()
     spriteAll = pygame.sprite.RenderUpdates()
-    spritePlate = pygame.sprite.RenderUpdates()
     spriteEndgame = pygame.sprite.RenderUpdates()
     
     #CatacombeScene.containers = spritePlate
@@ -71,17 +67,16 @@ def main():
     LIFE = Life( ImageOhMummy )
     Input = InputHandler()
     SCORE = Score( ImageOhMummy )
-    sceneView = ViewScene( spritePlate, screen, background, ImageOhMummy, spriteAll )
     
-    GameScene = CatacombeScene( ImageOhMummy, LIFE, clock, Input, SCORE, sceneView )
-    NextLevelScene = UpLevelScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
-    myGameOverScene = GameOverScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
+    GameScene = CatacombeScene( screen, ImageOhMummy, spriteAll,LIFE, clock, Input, SCORE )
+    # NextLevelScene = UpLevelScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
+    # myGameOverScene = GameOverScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
     SCORE.setScene( GameScene )
     
     # Le jeu proprement dit
     GameScene.Initialize()
-    NextLevelScene.Initialize()
-    myGameOverScene.Initialize()
+    # NextLevelScene.Initialize()
+    # myGameOverScene.Initialize()
 
     sLoader = SceneLoader() 
     sLoader.setInputHandler( Input )
