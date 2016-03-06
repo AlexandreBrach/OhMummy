@@ -4,6 +4,9 @@ import pygame.image
 import random
 import time
 
+# Direction algorithme
+from DirectionAlgo import BlindDirection,SillyDirection,SceneAwareDirection,SceneAwareFacingDirection,TargetDirection,TargetRandomPathDirection
+
 from movers import Gargou,Mummy,GuardianMummy
 
 from Views import *
@@ -31,6 +34,15 @@ class CatacombeScene():
         self.Gargou = Gargou( self )
         self.Gargou.level = 1
         self.view = ViewScene( self.screen, self.sprites, self.spriteAll, self.Mummy, self.guardianMummy, self.Gargou )
+        # Algorithme orederer with level
+        self.directionAlgo = [
+            BlindDirection(),
+            SillyDirection(),
+            TargetRandomPathDirection(),
+            SceneAwareDirection(),
+            SceneAwareFacingDirection(),
+            TargetDirection()
+        ];
         
     #-------------------------------------
     # Démarage de la scène
@@ -65,8 +77,9 @@ class CatacombeScene():
         self.plate[1][16] = 1
         self.plate[2][15] = 1
         self.plate[2][16] = 1
+
         # Ajout d'une momie supplémetaire
-        self.Mummy.append(Mummy(1, 23, self))
+        self.Mummy.append(Mummy(1, 23, self, self.directionAlgo[self.Gargou.level-1] ))
         # Réinitialisation emplacement momies
         i = 1
         for mum in self.Mummy:
@@ -112,7 +125,7 @@ class CatacombeScene():
                 guardian.iteration += 1
                 
                 if guardian.iteration == 16:
-                    self.Mummy.append(Mummy(guardian.x, guardian.y, self))
+                    self.Mummy.append(Mummy(guardian.x, guardian.y, self, self.directionAlgo[self.Gargou.level-1] ))
                     self.plate[guardian.y][guardian.x] = 1
                     self.plate[guardian.y+1][guardian.x] = 1
                     self.plate[guardian.y][guardian.x+1] = 1

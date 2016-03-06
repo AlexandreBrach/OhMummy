@@ -39,43 +39,19 @@ class Gargou():
             self.scene.terminate( 'UpLevel' )
 
 class Mummy():
-    def __init__(self, x, y, scene):
+    def __init__(self, x, y, scene, directionAlgo):
         self.scene = scene
         self.x = x
         self.y = y
         self.facing = 0
         self.moveIterate = 0
         self.movable = 0
+        self.directionAlgo = directionAlgo
         
     def move(self):
         self.movable = (self.movable + 1 ) % 3
-        if self.movable == 0:        
-            if self.scene.Gargou.level == 1: direct = random.randint(0, 3)
-            elif self.scene.Gargou.level == 2: direct = random.choice([0, 1, 2, 3, self.facing, self.facing])
-            elif self.scene.Gargou.level == 3: direct = random.choice(self.scene.getAvailableDirections( self.x, self.y ))
-            elif self.scene.Gargou.level == 4:
-                m = self.scene.getAvailableDirections( self.x, self.y )
-                m.extend([self.facing, self.facing, self.facing])
-                direct = random.choice(m)
-            elif self.scene.Gargou.level == 5:
-                m = []
-                if self.x == self.scene.Gargou.x:
-                    if self.y - self.scene.Gargou.y < 0: direct = 3
-                    elif self.y - self.scene.Gargou.y > 0: direct = 1
-                elif self.y == self.scene.Gargou.y:
-                    if self.x - self.scene.Gargou.x < 0: direct = 0
-                    elif self.x - self.scene.Gargou.x > 0: direct = 2
-                else:
-                    m = self.scene.getAvailableDirections( self.x, self.y )
-                    m.extend([self.facing, self.facing, self.facing])
-                    direct = random.choice(m)
-            elif self.scene.Gargou.level >= 6:
-                m = []
-                if self.x - self.scene.Gargou.x < 0: m.append(0)
-                elif self.x - self.scene.Gargou.x > 0: m.append(2)
-                if self.y - self.scene.Gargou.y < 0: m.append(3)
-                elif self.y - self.scene.Gargou.y > 0: m.append(1)
-                direct = random.choice(m)
+        if self.movable == 0:
+            direct = self.directionAlgo.getDirection( self.scene, self.x, self.y, self.facing, self.scene.Gargou.movement.x, self.scene.Gargou.movement.y )
 
             self.facing = direct
 
