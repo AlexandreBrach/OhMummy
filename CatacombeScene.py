@@ -5,7 +5,7 @@ import random
 import time
 
 # Direction algorithme
-from DirectionAlgo import BlindDirection,SillyDirection,SceneAwareDirection,SceneAwareFacingDirection,TargetDirection,TargetRandomPathDirection
+from DirectionAlgo import *
 
 from movers import Gargou,Mummy,GuardianMummy
 
@@ -13,7 +13,7 @@ from Views import *
 
 class CatacombeScene():
 
-    def __init__(self, screen, sprites, spriteAll, life, clock, input, score ):
+    def __init__(self, view, life, clock, input, score ):
         self.Life = life
         self.debug = True
         self.level = 1
@@ -21,9 +21,7 @@ class CatacombeScene():
         self.input = input
         self.plate = []
         self.score = score
-        self.screen = screen
-        self.sprites = sprites
-        self.spriteAll= spriteAll
+        self.view = view
 
     #-------------------------------------
     # Construction de la scene
@@ -33,7 +31,10 @@ class CatacombeScene():
         self.guardianMummy = []
         self.Gargou = Gargou( self )
         self.Gargou.level = 1
-        self.view = ViewScene( self.screen, self.sprites, self.spriteAll, self.Mummy, self.guardianMummy, self.Gargou )
+        self.view.Mummy = self.Mummy
+        self.view.Guardian = self.guardianMummy
+        self.view.Gargou = self.Gargou
+
         # Algorithme orederer with level
         self.directionAlgo = [
             BlindDirection(),
@@ -166,7 +167,8 @@ class CatacombeScene():
             if self.level == 1:
                 self.Gargou.level += 1               
                 for mum in self.Mummy: 
-                    mum.kill()
+                    self.Mummy.remove(mum)
+                    self.view.remove(mum)
                 MUMMY = []                
         elif self.stopEventName == 'GameOver' :
             return
@@ -177,7 +179,7 @@ class CatacombeScene():
             self.guardianMummy.remove(guardian)
             self.view.remove(guardian)
         
-    def draw(self,screen):
+    def draw(self):
         self.view.render()
 
     #-------------------------------------

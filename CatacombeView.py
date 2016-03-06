@@ -3,18 +3,15 @@ import pygame
 import pygame.image
 from pygame.locals import *
 
-class ViewScene(pygame.sprite.Sprite):
+class CatacombeView(pygame.sprite.Sprite):
 
-    def __init__(self, screen, spriteSet, spriteAll, Mummy, Guardian, Gargou ):
+    def __init__(self, screen, spriteSet, spriteAll ):
         SCREENRECT = Rect(0, 0, 768, 544)
         spritePlate = pygame.sprite.RenderUpdates()
         self.containers = spritePlate
         self.spritePlate = spritePlate
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.screen = screen
-        self.Mummy = Mummy;
-        self.Guardian = Guardian;
-        self.Gargou = Gargou;
         self.image = pygame.Surface((592, 384))
         background = pygame.Surface(SCREENRECT.size)
         self.background = background.convert()

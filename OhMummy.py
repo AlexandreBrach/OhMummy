@@ -25,7 +25,9 @@ from GameOverScene import GameOverScene
 # Importations des éléments mobiles du jeu
 from movers import Gargou,Mummy,GuardianMummy
 
-from Views import *
+from CatacombeView import *
+from UpLevelView import *
+from GameOverView import *
 
 # Initialisation
 
@@ -45,11 +47,8 @@ def main():
     spriteAll = pygame.sprite.RenderUpdates()
     spriteEndgame = pygame.sprite.RenderUpdates()
     
-    #CatacombeScene.containers = spritePlate
     Score.containers = spriteAll
-    #Gargou.containers = spriteAll
     Life.containers = spriteAll
-    #Mummy.containers = spriteAll
     GuardianMummy.containers = spriteAll
 
     # Instantiation des élements du jeu
@@ -67,20 +66,25 @@ def main():
     LIFE = Life( ImageOhMummy )
     Input = InputHandler()
     SCORE = Score( ImageOhMummy )
-    
-    GameScene = CatacombeScene( screen, ImageOhMummy, spriteAll,LIFE, clock, Input, SCORE )
-    # NextLevelScene = UpLevelScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
-    # myGameOverScene = GameOverScene( screen, ImageOhMummy, Input, clock, background, SCORE, LIFE )
+
+    catacombeView = CatacombeView( screen, ImageOhMummy, spriteAll )
+    GameScene = CatacombeScene( catacombeView, LIFE, clock, Input, SCORE )
+    GameScene.Initialize()
+
+    upLevelView = UpLevelView( screen, ImageOhMummy )
+    NextLevelScene = UpLevelScene( upLevelView, Input, clock, SCORE, LIFE )
+    NextLevelScene.Initialize()
+
+    gameOverView = GameOverView( screen, ImageOhMummy )
+    myGameOverScene = GameOverScene( gameOverView, Input, clock, SCORE, LIFE )
     SCORE.setScene( GameScene )
     
-    # Le jeu proprement dit
-    GameScene.Initialize()
-    # NextLevelScene.Initialize()
     # myGameOverScene.Initialize()
 
+    # Scene Loader
     sLoader = SceneLoader() 
     sLoader.setInputHandler( Input )
-    sLoader.setScreen( screen )
+
     goon = True
     while goon :
         runResult = sLoader.run( GameScene ) 

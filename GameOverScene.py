@@ -6,14 +6,12 @@ import time
 
 class GameOverScene():
 
-    def __init__(self, screen, sprites, input, clock, background, score, Life ):
-        self.spriteSet = sprites
+    def __init__(self, view, input, clock, score, Life ):
         self.input = input
         self.clock = clock
-        self.background = background
         self.score = score
         self.Life = Life
-        self.screen = screen
+        self.view = view
 
     #-------------------------------------
     # Construction de la scene
@@ -25,20 +23,10 @@ class GameOverScene():
     # Démarrage de la scène
     #-------------------------------------
     def Start(self ):
-        if random.randint(0, 1) == 0 and self.Life.life < 9:
-            self.bonus = 'Life+1'
-        else:
-            self.bonus = 'Score+200'
-            
-        if self.bonus == 'Life+1':
-            self.Life.life += 1
-        else:
-            self.score.score += 200
         return
 
     def prepareGraphics(self):
-        self.screen.blit(self.spriteSet['GameOver'], (208, 238))
-        pygame.display.flip()
+        self.view.init()
 
     #-------------------------------------
     # DELTA T
@@ -54,7 +42,7 @@ class GameOverScene():
     def Stop(self):
         self.preDispatch()
         
-    def draw(self,screen):
+    def draw(self):
         return
     
     def terminate(self, code ):

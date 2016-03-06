@@ -6,14 +6,12 @@ import time
 
 class UpLevelScene():
 
-    def __init__(self, screen, sprites, input, clock, background, score, Life ):
-        self.spriteSet = sprites
+    def __init__(self, view, input, clock, score, Life ):
         self.input = input
         self.clock = clock
-        self.background = background
         self.score = score
         self.Life = Life
-        self.screen = screen
+        self.view = view
 
     #-------------------------------------
     # Construction de la scene
@@ -34,15 +32,12 @@ class UpLevelScene():
             self.Life.life += 1
         else:
             self.score.score += 200
+
+        self.view.bonus = self.bonus
         return
 
     def prepareGraphics(self):
-        if self.bonus == 'Life+1':
-            self.background.blit(self.spriteSet['EndLife'], (0, 0))
-        else:
-            self.background.blit(self.spriteSet['End200'], (0, 0))
-        self.screen.blit( self.background, (0, 0))
-        pygame.display.flip()
+        self.view.init()
 
     #-------------------------------------
     # DELTA T
@@ -58,7 +53,7 @@ class UpLevelScene():
     def Stop(self):
         self.preDispatch()
         
-    def draw(self,screen):
+    def draw(self):
         return
     
     def terminate(self, code ):

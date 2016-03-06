@@ -14,9 +14,6 @@ class SceneLoader():
     def setInputHandler(self, Input):
         self.input = Input
         
-    def setScreen(self, screen):
-        self.screen = screen
-
     # ------------------------------------------------
     # Lance la scene
     # Renvoie false si une interruption de programme est 
@@ -44,7 +41,7 @@ class SceneLoader():
              
             # ------ BOUCLE DU JEU ------
             Scene.tick()
-            Scene.draw( self.screen )
+            Scene.draw()
             self.clock.tick(fps)
         Scene.Stop()
         return True
