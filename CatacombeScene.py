@@ -1,6 +1,4 @@
 # -*- coding: cp1252 -*-
-import pygame
-import pygame.image
 import random
 import time
 
@@ -123,8 +121,6 @@ class CatacombeScene():
         for guardian in self.guardianMummy:
             guardian.tick()
             if guardian.movable == 0:
-                guardian.iteration += 1
-                
                 if guardian.iteration == 16:
                     self.Mummy.append(Mummy(guardian.x, guardian.y, self, self.directionAlgo[self.Gargou.level-1] ))
                     self.plate[guardian.y][guardian.x] = 1
@@ -137,7 +133,7 @@ class CatacombeScene():
 
         # Pour chaque momie
         for mum in self.Mummy:    
-            mum.move()
+            mum.tick()
 
             # Collision Momie/Joueur ?
             if abs(mum.x - self.Gargou.movement.x) <= 1 and abs(mum.y - self.Gargou.movement.y) <= 1:

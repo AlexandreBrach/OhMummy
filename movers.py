@@ -1,7 +1,6 @@
 # -*- coding: cp1252 -*-
 import pygame
 import random
-import CatacombeScene
 from movement import *
 
 class Gargou():
@@ -11,7 +10,8 @@ class Gargou():
         self.movement = Movement( scene, 15, 1, 0, 0 )
 
     def move(self, direction):
-        try: direction = direction.index(1)
+        try: 
+            direction = direction.index(1)
         except: return
 
         self.movement.facing = direction
@@ -48,7 +48,7 @@ class Mummy():
         self.movable = 0
         self.directionAlgo = directionAlgo
         
-    def move(self):
+    def tick(self):
         self.movable = (self.movable + 1 ) % 3
         if self.movable == 0:
             direct = self.directionAlgo.getDirection( self.scene, self.x, self.y, self.facing, self.scene.Gargou.movement.x, self.scene.Gargou.movement.y )
@@ -102,3 +102,5 @@ class GuardianMummy():
 
     def tick(self):
         self.movable = (self.movable + 1 ) % 6
+        if self.movable == 0:
+            self.iteration += 1
