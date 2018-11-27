@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 
 class InputHandler():
@@ -7,7 +7,7 @@ class InputHandler():
         self.direction = []
         self.escape = []
         self.oldState = 0
-    
+
     def calcDirection(self, keystate):
         newState = keystate[pygame.K_RIGHT] + ( keystate[pygame.K_UP] << 1 ) + ( keystate[pygame.K_LEFT] << 2 ) + ( keystate[pygame.K_DOWN] << 3 )
         newKeyPressed = newState & self.oldState
@@ -37,14 +37,12 @@ class InputHandler():
         self.nextLevel = False
         self.pressC = False
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE): 
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.escape = True
-        
 
-        # Détection évenement clavier
+
         keystate = pygame.key.get_pressed()
-        
-        # FPS
+
         if keystate[pygame.K_KP_MINUS] == 1:
             self.decreaseFps = True
         elif keystate[pygame.K_KP_PLUS] == 1:
@@ -54,7 +52,5 @@ class InputHandler():
         elif keystate[ord('c')] or keystate[ord('C')]:
             self.pressC = True
 
-        # Direction
-        # self.direction = [keystate[pygame.K_RIGHT], keystate[pygame.K_UP], keystate[pygame.K_LEFT], keystate[pygame.K_DOWN]]
         self.direction = self.calcDirection( keystate )
         return

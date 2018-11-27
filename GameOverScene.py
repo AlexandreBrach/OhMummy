@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import pygame.image
 import random
@@ -13,25 +13,25 @@ class GameOverScene():
         self.Life = Life
         self.view = view
 
-    #-------------------------------------
-    # Construction de la scene
-    #-------------------------------------
     def Initialize(self):
+        '''
+        scene construction
+        '''
         return
-    
-    #-------------------------------------
-    # Démarrage de la scène
-    #-------------------------------------
+
     def Start(self ):
+        '''
+        scene begining
+        '''
         return
 
     def prepareGraphics(self):
         self.view.init()
 
-    #-------------------------------------
-    # DELTA T
-    #-------------------------------------
     def tick(self):
+        '''
+        scene tick
+        '''
         if self.input.pressC :
             self.terminate( 'CPressed' )
         self.clock.tick(10)
@@ -41,10 +41,10 @@ class GameOverScene():
 
     def Stop(self):
         self.preDispatch()
-        
+
     def draw(self):
         return
-    
+
     def terminate(self, code ):
         self.stopEventName = code
         self.stopEvent = True

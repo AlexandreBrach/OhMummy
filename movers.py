@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import random
 from movement import *
@@ -10,7 +10,7 @@ class Gargou():
         self.movement = Movement( scene, 15, 1, 0, 0 )
 
     def move(self, direction):
-        try: 
+        try:
             direction = direction.index(1)
         except: return
 
@@ -19,8 +19,8 @@ class Gargou():
             return
 
         self.movement.moveIterate = (self.movement.moveIterate + 1) % 2
-        
-        if self.movement.entrave == False :                    
+
+        if self.movement.obstacle == False :
             if self.movement.facing == 0:
                 self.scene.trace[self.movement.y][self.movement.x-1] = 1
                 self.scene.trace[self.movement.y+1][self.movement.x-1] = 1
@@ -29,12 +29,12 @@ class Gargou():
                 self.scene.trace[self.movement.y+2][self.movement.x+1] = 1
             elif self.movement.facing == 2:
                 self.scene.trace[self.movement.y][self.movement.x+2] = 1
-                self.scene.trace[self.movement.y+1][self.movement.x+2] = 1            
+                self.scene.trace[self.movement.y+1][self.movement.x+2] = 1
             elif self.movement.facing == 3:
                 self.scene.trace[self.movement.y-1][self.movement.x] = 1
                 self.scene.trace[self.movement.y-1][self.movement.x+1] = 1
-        
-        # Passage de niveau ?
+
+        # Next Level ?
         if self.scene.Key and self.scene.RoyalMummy and self.movement.x == 15 and self.movement.y == 1:
             self.scene.terminate( 'UpLevel' )
 
@@ -47,7 +47,7 @@ class Mummy():
         self.moveIterate = 0
         self.movable = 0
         self.directionAlgo = directionAlgo
-        
+
     def tick(self):
         self.movable = (self.movable + 1 ) % 3
         if self.movable == 0:
@@ -55,8 +55,8 @@ class Mummy():
 
             self.facing = direct
 
-            x = self.x; 
-            y = self.y 
+            x = self.x;
+            y = self.y
             if direct == 0: x = self.x + 1
             elif direct == 1: y = self.y - 1
             elif direct == 2: x = self.x - 1
@@ -70,7 +70,7 @@ class Mummy():
                     self.x = x
                     self.y = y
             else: return
-            self.moveIterate = (self.moveIterate + 1) % 2        
+            self.moveIterate = (self.moveIterate + 1) % 2
 
     def Restart(self, x, y):
         self.x = x
@@ -78,26 +78,25 @@ class Mummy():
         self.facing = 0
         self.moveIterate = 0
         self.movable = 0
-    
+
 class GuardianMummy():
     def __init__(self, scene, x, y):
-        # x et y corresponde au numéro de la boîte sachant que 0<=x<=4 et 0<=y<=3
+        # x et y : position of the bloc hosting the guardian
         self.iteration = 0
-        
-        ## Définition de la position de naissance de la Momie        
-        if scene.Gargou.movement.x < 3 + 7 * x: 
+
+        if scene.Gargou.movement.x < 3 + 7 * x:
             self.x = 3 + 7 * x
-        elif scene.Gargou.movement.x > 6 + 7 * x: 
+        elif scene.Gargou.movement.x > 6 + 7 * x:
             self.x = 6 + 7 * x
-        else: 
+        else:
             self.x = scene.Gargou.movement.x
-        if scene.Gargou.movement.y < 5 + 5 * y: 
+        if scene.Gargou.movement.y < 5 + 5 * y:
             self.y = 5 + 5 * y
-        elif scene.Gargou.movement.y > 6 + 5 * y: 
+        elif scene.Gargou.movement.y > 6 + 5 * y:
             self.y = 6 + 5 * y
-        else: 
+        else:
             self.y = scene.Gargou.movement.y
-        self.movable = 0 
+        self.movable = 0
         self.scene = scene
 
     def tick(self):

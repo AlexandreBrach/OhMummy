@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import pygame.image
 from pygame.locals import *
@@ -20,21 +20,20 @@ class CatacombeView(pygame.sprite.Sprite):
         self.spriteAll = spriteAll
 
     def init(self, level, Life, Score, plate, debug, boxchoice ):
+        '''
+        initialization of the view
+        '''
         l = str(level)
-        
-        # RAZ Affichage
+
         self.background.fill((255,255,0))
         self.screen.blit( self.background, (0, 0))
         pygame.display.flip()
 
-        # Rendu du tableau
-        
         self.image.fill((255, 255, 0))
         self.rect = self.image.get_rect()
         self.rect.left = 96
         self.rect.top = 94
 
-        ##  Affichage du plateau
         for i in range(1, 25):
             for j in range(1, 38):
                 if plate[i][j] == 1:
@@ -46,7 +45,6 @@ class CatacombeView(pygame.sprite.Sprite):
                 if debug:
                     self.image.blit( self.debugfont.render( boxchoice[5*i+j], True, (255,255,255), (0,0,0) ), (32 + 16 * 7 * j, 64 + 16 * 5 * i))
 
-        # Dessin des vies
         Life.render()
         Score.render()
         if debug:
@@ -55,71 +53,71 @@ class CatacombeView(pygame.sprite.Sprite):
     def remove( self, spriteContainer ):
         spriteContainer.sprite.kill()
 
-    # Render of the scene
     def render(self):
+        '''
+        scene rendering
+        '''
 
-        # Check if mover has sprite
         if( not( hasattr( self.Gargou, 'sprite' ) ) ):
              self.Gargou.sprite = GargouSprite( self.spriteAll,  self.spriteSet)
-        for mum in self.Mummy: 
+        for mum in self.Mummy:
             if( not( hasattr( mum, 'sprite' ) ) ):
                 mum.sprite = MummySprite( self.spriteAll,  self.spriteSet)
-        for guard in self.Guardian: 
+        for guard in self.Guardian:
             if( not( hasattr( guard, 'sprite' ) ) ):
                 guard.sprite = GuardianSprite( self.spriteAll,  self.spriteSet)
 
         self.Gargou.sprite.trace(self.Gargou.movement)
-        if self.Gargou.movement.entrave == False :
+        if self.Gargou.movement.obstacle == False :
             self.addTrace( self.Gargou.movement )
-        # Pour chaque momie
-        for mum in self.Mummy:    
+
+        for mum in self.Mummy:
             mum.sprite.trace(mum.x, mum.y, mum.facing, mum.moveIterate)
 
-        # Pour chaque guardien
-        for guardian in self.Guardian:    
+        for guardian in self.Guardian:
             guardian.sprite.trace(guardian.x, guardian.y, guardian.iteration)
 
         pl = self.spritePlate.draw( self.screen )
-        dirty = self.spriteAll.draw( self.screen )    
+        dirty = self.spriteAll.draw( self.screen )
         pygame.display.update(pl)
         pygame.display.update(dirty)
 
     def openBloc(self, box, x, y ):
         self.image.blit(self.spriteSet['Box'][box[y][x]], (32 + 112 * x, 64 + 80 * y))
-        
+
     def eraseTrace(self, x, y):
         self.image.blit(self.spriteSet['Trace']['None'], (16 * x - 16, 16 * y - 16))
         self.image.blit(self.spriteSet['Trace']['None'], (16 * (x+1) - 16, 16 * y - 16))
         self.image.blit(self.spriteSet['Trace']['None'], (16 * x - 16, 16 * (y+1) - 16))
         self.image.blit(self.spriteSet['Trace']['None'], (16 * (x+1) - 16, 16 * (y+1) - 16))
-     
+
     def addTrace(self, movement ):
         if movement.facing == 0:
-            if movement.moveIterate == 0: 
+            if movement.moveIterate == 0:
                 self.image.blit(self.spriteSet['Trace']['DownRight'], (16 * movement.x - 32, 16 * movement.y - 16))
-            else: 
-                self.image.blit(self.spriteSet['Trace']['UpRight'], (16 * movement.x - 32, 16 * movement.y - 16))  
-        
+            else:
+                self.image.blit(self.spriteSet['Trace']['UpRight'], (16 * movement.x - 32, 16 * movement.y - 16))
+
         elif movement.facing == 1:
-            if movement.moveIterate == 0: 
+            if movement.moveIterate == 0:
                 self.image.blit(self.spriteSet['Trace']['LeftUp'], (16 * movement.x - 16, 16 * movement.y + 16))
-            else: 
-                self.image.blit(self.spriteSet['Trace']['RightUp'], (16 * movement.x - 16, 16 * movement.y + 16))      
+            else:
+                self.image.blit(self.spriteSet['Trace']['RightUp'], (16 * movement.x - 16, 16 * movement.y + 16))
 
         elif movement.facing == 2:
-            if movement.moveIterate == 0: 
+            if movement.moveIterate == 0:
                 self.image.blit(self.spriteSet['Trace']['DownLeft'], (16 * movement.x + 16 , 16 * movement.y - 16))
-            else: 
+            else:
                 self.image.blit(self.spriteSet['Trace']['UpLeft'], (16 * movement.x + 16, 16 * movement.y - 16))
-        
+
         elif movement.facing == 3:
-            if movement.moveIterate == 0: 
+            if movement.moveIterate == 0:
                 self.image.blit(self.spriteSet['Trace']['LeftDown'], (16 * movement.x - 16, 16 * movement.y - 32))
-            else: 
-                self.image.blit(self.spriteSet['Trace']['RightDown'], (16 * movement.x - 16 , 16 * movement.y - 32 ))            
-                
+            else:
+                self.image.blit(self.spriteSet['Trace']['RightDown'], (16 * movement.x - 16 , 16 * movement.y - 32 ))
+
 class GargouSprite(pygame.sprite.Sprite):
-    
+
     def __init__(self,spriteAll, spriteSet ):
         self.containers = spriteAll
         pygame.sprite.Sprite.__init__(self, self.containers)
@@ -130,37 +128,35 @@ class GargouSprite(pygame.sprite.Sprite):
         self.rect.top = 94
 
     def trace(self, movement):
-        # sprite à afficher
         self.image = self.spriteSet['Gargou']['Face'][2 * movement.facing + movement.moveIterate]
-        # calcul des vraies coordonnées à l'ecran
         self.rect.left = 80 + 16 * movement.x
         self.rect.top = 78 + 16 * movement.y
 
 class MummySprite(pygame.sprite.Sprite):
-    
+
     def __init__(self,spriteAll, spriteSet):
         self.containers = spriteAll
         self.spriteSet = spriteSet
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.spriteSet['Mummy']['MoveRight']
         self.rect = self.image.get_rect()
-        
+
     def trace(self, x,y, facing, moveIterate):
         self.image = self.spriteSet['Mummy']['Face'][2 * facing + moveIterate]
         self.rect.left = 80 + 16 * x
         self.rect.top = 78 + 16 * y
 
 class GuardianSprite(pygame.sprite.Sprite):
-    
+
     def __init__(self,spriteAll, spriteSet):
         self.containers = spriteAll
         self.spriteSet = spriteSet
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.image = self.spriteSet['Mummy']['MoveRight']
         self.rect = self.image.get_rect()
-        
+
     def trace(self, x,y, moveIterate):
-    
+
         self.image = self.spriteSet['GuardianMummy'][moveIterate+1]
         self.rect = self.image.get_rect()
         self.rect.top = 110 + 16 * y - 2 * moveIterate
