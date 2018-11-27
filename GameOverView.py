@@ -1,11 +1,11 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import pygame.image
 from pygame.locals import *
 
 class GameOverView():
 
-    def __init__(self, screen, sprites): 
+    def __init__(self, screen, sprites):
         SCREENRECT = Rect(0, 0, 768, 544)
         self.spriteSet = sprites
         self.screen = screen

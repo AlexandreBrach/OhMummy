@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import pygame.image
 import random
@@ -13,21 +13,15 @@ class UpLevelScene():
         self.Life = Life
         self.view = view
 
-    #-------------------------------------
-    # Construction de la scene
-    #-------------------------------------
     def Initialize(self):
         return
-    
-    #-------------------------------------
-    # Démarrage de la scène
-    #-------------------------------------
+
     def Start(self):
         if random.randint(0, 1) == 0 and self.Life.life < 9:
             self.bonus = 'Life+1'
         else:
             self.bonus = 'Score+200'
-            
+
         if self.bonus == 'Life+1':
             self.Life.life += 1
         else:
@@ -39,9 +33,6 @@ class UpLevelScene():
     def prepareGraphics(self):
         self.view.init()
 
-    #-------------------------------------
-    # DELTA T
-    #-------------------------------------
     def tick(self):
         if self.input.pressC :
             self.terminate( 'CPressed' )
@@ -52,10 +43,10 @@ class UpLevelScene():
 
     def Stop(self):
         self.preDispatch()
-        
+
     def draw(self):
         return
-    
+
     def terminate(self, code ):
         self.stopEventName = code
         self.stopEvent = True

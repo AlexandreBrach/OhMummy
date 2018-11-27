@@ -1,9 +1,9 @@
-# -*- coding: cp1252 -*-
+
 import pygame
 import pygame.image
 
 class MummySprites():
-    
+
     def getSprites(self):
 
         ImageOhMummy = {}
@@ -31,11 +31,11 @@ class MummySprites():
         i = ImageOhMummy['Mummy']
         ImageOhMummy['Mummy']['Face'] = [i['Right'], i['MoveRight'], i['MoveUpLeft'], i['MoveUpRight'],
                                           i['Left'], i['MoveLeft'], i['MoveDownLeft'], i['MoveDownRight']]
-        
+
         ImageOhMummy['GuardianMummy'] = {}
         for i in range(1, 17):
             ImageOhMummy['GuardianMummy'][i] = pygame.image.load("./Image/GuardianMummy"+str(i)+".png")
-        
+
         ImageOhMummy['Trace'] = {}
         ImageOhMummy['Trace']['None'] = pygame.image.load("./Image/TraceNone.png")
         ImageOhMummy['Trace']['LeftDown'] = pygame.image.load("./Image/TraceLeftDown.png")
@@ -46,7 +46,7 @@ class MummySprites():
         ImageOhMummy['Trace']['DownRight'] = pygame.image.load("./Image/TraceDownRight.png")
         ImageOhMummy['Trace']['UpLeft'] = pygame.image.load("./Image/TraceUpLeft.png")
         ImageOhMummy['Trace']['UpRight'] = pygame.image.load("./Image/TraceUpRight.png")
-        
+
         ImageOhMummy['Box'] = {}
         ImageOhMummy['Box']['RoyalMummy'] = pygame.image.load("./Image/RoyalMummy.png")
         ImageOhMummy['Box']['Scroll'] = pygame.image.load("./Image/Scroll.png")
@@ -61,15 +61,15 @@ class MummySprites():
         ImageOhMummy['Lettre'] = {}
         ImageOhMummy['Score'] = pygame.image.load("./Image/Score.png")
         ImageOhMummy['Men'] = pygame.image.load("./Image/Men.png")
-        
-        
+
+
         ImageOhMummy['EndLife'] = pygame.image.load("./Image/EndLife.png")
         ImageOhMummy['End200'] = pygame.image.load("./Image/End200.png")
         ImageOhMummy['GameOver'] = pygame.image.load("./Image/GameOver.png")
-        
-        
+
+
         for i in range(10):
             ImageOhMummy['Chiffre'][i] = pygame.image.load('./Image/Chiffre'+str(i)+".png")
             ImageOhMummy['ChiffreScroll'][i] = pygame.image.load('./Image/ChiffreScroll'+str(i)+".png")
-            
+
         return ImageOhMummy
